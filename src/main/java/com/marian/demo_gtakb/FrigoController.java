@@ -4,6 +4,7 @@ package com.marian.demo_gtakb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -22,6 +23,7 @@ public class FrigoController {
     //Data from Arduino
     @PostMapping("/addFridgeDetail")
     public String addFrigoDetail(@RequestBody Rilevazione fDetail){
+        fDetail.setTimestame(LocalDateTime.now());
         service.addFrigoDetail(fDetail);
         return "Success";
     }
