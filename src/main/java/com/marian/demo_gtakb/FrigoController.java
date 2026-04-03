@@ -1,11 +1,13 @@
 package com.marian.demo_gtakb;
 
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -15,9 +17,17 @@ public class FrigoController {
     @Autowired
     FrigoService service;
 
+    @Value("${frg.secret.key}")
+    private String fridgeSecretKey;
+
     @GetMapping("/getFridgeDetails")
-    public List<Rilevazione> getFrigoDetails(){
-        return service.getFrigoDetails();
+    public ResponseEntity<?> getFrigoDetails(@RequestHeader ("FRIDGE_KEY") String key){
+
+        if(!fridgeSecretKey.equalsIgnoreCase(key)){
+            return  ResponseEntity.status(403).body("Unauthorized");
+        }
+
+        return ResponseEntity.ok(service.getFrigoDetails());
     }
 
     //Data from Arduino
